@@ -1,0 +1,5 @@
+# Secrets and registrants' personal data never go to GitHub
+.env
+inscriptions.csv
+.DS_Store
+__pycache__/

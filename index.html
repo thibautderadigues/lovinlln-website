@@ -1,0 +1,849 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="description" content="Lovin' LLN : un petit speed dating à la cool entre étudiant·es à Louvain-la-Neuve.">
+<title>Lovin' LLN</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght,SOFT@9..144,300..600,100&family=Figtree:wght@400;500;600;700&display=swap">
+<style>
+  /* Layout: burgundy page. Hero = title + CTA left, tilted photo collage right. Sign-up section below, heading left, form right. Square corners everywhere. */
+  :root {
+    --wine: #5c0118;
+    --wine-deep: #570016;
+    --red: #ff2d46;
+    --cream: #f8efea;
+    --cream-70: rgba(248, 239, 234, .74);
+    --cream-50: rgba(248, 239, 234, .5);
+    --line: rgba(248, 239, 234, .22);
+    --fill: rgba(248, 239, 234, .06);
+    --serif: "Fraunces", Georgia, "Times New Roman", serif;
+    --serif-vs: "SOFT" 100;
+    --serif-w: 380;
+    --sans: "Figtree", "Helvetica Neue", Arial, sans-serif;
+    color-scheme: dark;
+  }
+  * { box-sizing: border-box; border-radius: 0; }
+  [hidden] { display: none !important; }
+  html, body { background: var(--wine); overflow-x: clip; }
+  body {
+    color: var(--cream);
+    font-family: var(--sans);
+    font-size: 17px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    padding-inline: 24px;
+  }
+  .wrap { max-width: 1200px; margin: 0 auto; }
+  .hl { color: var(--red); }
+  .nw { white-space: nowrap; }
+
+  /* top bar */
+  .bar {
+    position: sticky;
+    top: env(safe-area-inset-top, 0px);
+    z-index: 20;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 22px;
+    background: var(--wine);
+    /* full-bleed background while content stays in the wrap */
+    box-shadow: 0 0 0 100vmax var(--wine);
+    clip-path: inset(0 -100vmax);
+  }
+  .bar::after {
+    content: "";
+    position: absolute;
+    left: -100vmax;
+    right: -100vmax;
+    bottom: 0;
+    height: 1px;
+    background: rgba(248, 239, 234, .08);
+    opacity: 0;
+    transition: opacity .25s;
+  }
+  .bar { transition: background .3s, box-shadow .3s, color .3s; }
+  .bar a { transition: color .3s, border-color .3s; }
+  .bar.scrolled {
+    background: #fff;
+    box-shadow: 0 0 0 100vmax #fff;
+    color: var(--wine);
+  }
+  .bar.scrolled a { color: var(--wine); border-color: rgba(92, 1, 24, .22); }
+  .bar.scrolled a:hover { border-color: var(--wine); }
+  .bar.scrolled::after { opacity: 1; background: rgba(92, 1, 24, .1); }
+  .logo {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 20px;
+    letter-spacing: -0.02em;
+    font-variation-settings: var(--serif-vs);
+  }
+  .logo svg { width: 33px; height: 23px; flex: none; }
+  .bar a {
+    color: var(--cream);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 15px;
+    border-bottom: 1px solid var(--line);
+    padding-bottom: 2px;
+    transition: border-color .2s;
+  }
+  .bar a:hover { border-color: var(--cream); }
+
+  /* hero */
+  .hero {
+    min-height: calc(100vh / var(--z, 1) - 72px);
+    min-height: calc(100svh / var(--z, 1) - 72px);
+    box-sizing: border-box;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    gap: 48px;
+    align-items: center;
+    padding-block: 32px 56px;
+  }
+  .hero-text { min-width: 0; }
+  .tag {
+    display: inline-block;
+    font-size: 16px;
+    line-height: 1.5;
+    font-weight: 500;
+    color: var(--cream-70);
+  }
+  .tag::before {
+    content: "";
+    display: inline-block;
+    vertical-align: middle;
+    margin: -2px 10px 0 0;
+    width: 7px;
+    height: 7px;
+    background: var(--red);
+    border-radius: 50%;
+  }
+  h1 {
+    margin: 20px 0 0;
+    font-family: var(--serif);
+    font-weight: var(--serif-w);
+    font-size: clamp(40px, 6vw, 84px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    font-variation-settings: var(--serif-vs);
+    text-wrap: balance;
+  }
+  .lede {
+    margin: 28px 0 0;
+    max-width: 30em;
+    font-size: 19px;
+    line-height: 1.55;
+    color: var(--cream-70);
+  }
+  .lede strong { color: var(--cream); font-weight: 700; }
+
+  .cta {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    padding: 13px 22px 13px 24px;
+    border-radius: 999px;
+    background: linear-gradient(135deg, #ff3b5c, #ff2d46 55%, #ff5a3c);
+    color: #fff;
+    font: 600 16px var(--sans);
+    letter-spacing: -0.01em;
+    text-decoration: none;
+    border: 0;
+    cursor: pointer;
+    transition: filter .2s, transform .2s;
+  }
+  .cta svg { width: 16px; height: 16px; transition: transform .2s; }
+  .cta:hover { filter: brightness(1.08); transform: translateY(-2px); }
+  .hero .cta {
+    background: var(--cream);
+    color: var(--wine);
+  }
+  .hero .cta:hover { background: #fff; filter: none; }
+  .cta:focus-visible { outline: 2px solid var(--cream); outline-offset: 4px; }
+  .actions {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 16px 24px;
+    margin-top: 36px;
+  }
+  .meta {
+    margin: 0;
+    padding: 0 0 0 24px;
+    list-style: none;
+    border-left: 1px solid var(--line);
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--cream-50);
+  }
+  .tag .sep { color: var(--cream-50); }
+
+  /* collage */
+  .collage {
+    position: relative;
+    width: 100%;
+    max-width: 620px;
+    justify-self: end;
+    aspect-ratio: 1 / 1.02;
+  }
+  .collage figure {
+    position: absolute;
+    margin: 0;
+    width: 44%;
+    aspect-ratio: 3 / 4;
+    overflow: hidden;
+    box-shadow: 0 24px 50px -24px rgba(0, 0, 0, .6);
+    transition: transform .5s cubic-bezier(.2, .7, .1, 1);
+  }
+  .collage img { width: 100%; height: 100%; object-fit: cover; display: block; }
+  .collage figure:nth-child(1) { left: 0;   top: 6%;  transform: rotate(-6deg); z-index: 2; }
+  .collage figure:nth-child(2) { left: 26%; top: 50%; transform: rotate(3deg);  z-index: 1; }
+  .collage figure:nth-child(3) { left: 52%; top: 0;   transform: rotate(-4deg); z-index: 3; }
+  .collage figure:nth-child(4) { left: 58%; top: 44%; transform: rotate(5deg);  z-index: 4; }
+  .collage:hover figure:nth-child(1) { transform: rotate(-8deg) translate(-6px, -4px); }
+  .collage:hover figure:nth-child(3) { transform: rotate(-2deg) translate(4px, -6px); }
+  .collage:hover figure:nth-child(4) { transform: rotate(7deg) translate(6px, 4px); }
+
+  /* how it works */
+  .how {
+    padding-block: 112px 120px;
+    background: #380010;
+    box-shadow: 0 0 0 100vmax #380010;
+    clip-path: inset(0 -100vmax);
+  }
+  .how-head { max-width: 640px; }
+  .how h2 {
+    margin: 16px 0 0;
+    font-family: var(--serif);
+    font-weight: var(--serif-w);
+    font-size: clamp(40px, 4.8vw, 64px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    font-variation-settings: var(--serif-vs);
+  }
+  .steps {
+    list-style: none;
+    margin: 64px 0 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px;
+  }
+  .steps li {
+    min-width: 0;
+    padding: 28px 28px 32px;
+    background: rgba(248, 239, 234, .05);
+    border: 1px solid rgba(248, 239, 234, .1);
+    display: grid;
+    align-content: start;
+    gap: 12px;
+  }
+  .steps .num {
+    font-family: var(--serif);
+    font-size: 44px;
+    line-height: 1;
+    margin-bottom: 12px;
+    color: var(--red);
+    font-variant-numeric: tabular-nums;
+    font-variation-settings: var(--serif-vs);
+  }
+  .steps h3 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: var(--serif-w);
+    font-size: 26px;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    font-variation-settings: var(--serif-vs);
+  }
+  .steps p { margin: 0; font-size: 16px; line-height: 1.55; color: var(--cream-70); }
+
+  /* sign-up */
+  .signup-section {
+    /* white section: remap the cream-on-wine tokens to wine-on-white */
+    --cream: #3a0512;
+    --cream-70: rgba(58, 5, 18, .74);
+    --cream-50: rgba(58, 5, 18, .52);
+    --line: rgba(92, 1, 24, .16);
+    --fill: #faf5f4;
+    --err: #d4143a;
+    color: var(--cream);
+    background: #fff;
+    box-shadow: 0 0 0 100vmax #fff;
+    clip-path: inset(0 -100vmax);
+    display: grid;
+    grid-template-columns: minmax(0, .9fr) minmax(0, 1.1fr);
+    gap: 64px;
+    padding-block: 96px 112px;
+    scroll-margin-top: 24px;
+  }
+  .signup-section h2 {
+    margin: 16px 0 0;
+    font-family: var(--serif);
+    font-weight: var(--serif-w);
+    font-size: clamp(40px, 4.8vw, 64px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    font-variation-settings: var(--serif-vs);
+    text-wrap: balance;
+  }
+  .signup-section .intro p {
+    margin: 20px 0 0;
+    max-width: 26em;
+    color: var(--cream-70);
+  }
+
+  form, .done { min-width: 0; }
+  form { display: grid; gap: 14px; align-content: start; }
+  .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  .field { display: grid; gap: 8px; min-width: 0; }
+  .field label {
+    font-size: 15px;
+    font-weight: 500;
+    color: var(--cream-70);
+  }
+  .field .label { font-size: 15px; font-weight: 500; color: var(--cream-70); }
+  .ages { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 8px; }
+  .sexes { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ages label { position: relative; cursor: pointer; }
+  .ages input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
+  .ages span {
+    display: block;
+    text-align: center;
+    padding: 15px 0;
+    background: var(--fill);
+    border: 1px solid var(--line);
+    color: var(--cream-70);
+    font: 500 17px var(--sans);
+    font-variant-numeric: tabular-nums;
+    transition: background .2s, border-color .2s, color .2s;
+  }
+  .ages label:hover span { border-color: var(--cream-50); }
+  .ages input:checked + span { background: var(--wine); border-color: var(--wine); color: #fff; font-weight: 600; }
+  .ages input:focus-visible + span { outline: 2px solid var(--cream); outline-offset: 2px; }
+  .ages.invalid span { border-color: var(--err, #ff9aa8); }
+  .age-other { margin-top: 8px; }
+  .age-other.invalid { border-color: var(--err, #ff9aa8); box-shadow: inset 0 0 0 1px var(--err, #ff9aa8); }
+  .age-other input::-webkit-inner-spin-button, .age-other input::-webkit-outer-spin-button { -webkit-appearance: none; margin: 0; }
+  .age-other input { -moz-appearance: textfield; }
+  .age-other .unit { padding-right: 16px; color: var(--cream-50); }
+  .box {
+    display: flex;
+    align-items: center;
+    background: var(--fill);
+    border: 1px solid var(--line);
+    transition: border-color .2s, background .2s;
+  }
+  .box:focus-within { border-color: var(--cream); background: #fff; }
+  .box.invalid { border-color: var(--err, #ff9aa8); box-shadow: inset 0 0 0 1px var(--err, #ff9aa8); }
+  .box .at { padding-left: 16px; color: var(--cream-50); font-weight: 500; }
+  .box input {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: none;
+    background: transparent;
+    color: var(--cream);
+    font: 500 17px var(--sans);
+    padding: 16px;
+  }
+  .box .at + input { padding-left: 3px; }
+  .box input::placeholder { color: rgba(58, 5, 18, .3); }
+  .box input:-webkit-autofill {
+    -webkit-text-fill-color: var(--cream);
+    transition: background-color 9999s;
+  }
+
+  .hp { display: none !important; }
+  .consent {
+    display: flex;
+    gap: 12px;
+    align-items: flex-start;
+    margin-top: 6px;
+    font-size: 14px;
+    line-height: 1.5;
+    color: var(--cream-70);
+    cursor: pointer;
+  }
+  .consent input {
+    appearance: none;
+    flex: none;
+    width: 18px;
+    height: 18px;
+    margin: 2px 0 0;
+    border: 1px solid var(--cream-50);
+    background: transparent;
+    display: grid;
+    place-content: center;
+    cursor: pointer;
+  }
+  .consent input::after {
+    content: "";
+    width: 9px;
+    height: 5px;
+    border-left: 2px solid #fff;
+    border-bottom: 2px solid #fff;
+    transform: rotate(-45deg) translate(1px, -1px);
+    opacity: 0;
+  }
+  .consent input:checked { background: var(--wine); border-color: var(--wine); }
+  .consent input:checked::after { opacity: 1; }
+  .consent input:focus-visible { outline: 2px solid var(--cream); outline-offset: 2px; }
+
+  .error { margin: 0; font-size: 14px; font-weight: 500; color: var(--err, #ff9aa8); }
+  form .cta { margin-top: 10px; justify-self: start; padding: 15px 28px 15px 30px; }
+  .cta .heart { width: 17px; height: 17px; transition: transform .25s cubic-bezier(.3, 1.6, .5, 1), fill .2s; }
+  form .cta { background: #111; color: #fff; }
+  form .cta:hover { background: #000; filter: none; }
+  form .cta[disabled] { opacity: .6; cursor: default; }
+  .fine { margin: 4px 0 0; font-size: 13px; color: var(--cream-50); }
+
+  .done { display: grid; gap: 16px; align-content: center; }
+  .done svg { width: 58px; height: 40px; }
+  .done h3 {
+    margin: 0;
+    font-family: var(--serif);
+    font-weight: var(--serif-w);
+    font-size: 40px;
+    line-height: 1.05;
+    letter-spacing: -0.03em;
+    font-variation-settings: var(--serif-vs);
+  }
+  .done p { margin: 0; color: var(--cream-70); max-width: 28em; }
+
+  .nav { display: flex; align-items: center; gap: 28px; }
+  footer .contact a { color: var(--cream); text-decoration: none; border-bottom: 1px solid var(--line); }
+  footer .contact a:hover { border-color: var(--cream); }
+  footer {
+    --cream: #3a0512;
+    --cream-50: rgba(58, 5, 18, .55);
+    --line: rgba(92, 1, 24, .2);
+    position: relative;
+    padding-block: 28px 36px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 12px;
+    font-size: 13px;
+    color: var(--cream-50);
+    background: #fff;
+    box-shadow: 0 0 0 100vmax #fff;
+    clip-path: inset(0 -100vmax);
+  }
+  footer::before {
+    content: "";
+    position: absolute;
+    left: -100vmax;
+    right: -100vmax;
+    top: 0;
+    height: 1px;
+    background: rgba(92, 1, 24, .1);
+  }
+
+  /* entrance */
+  .rise { animation: rise .9s cubic-bezier(.2, .7, .1, 1) both; }
+  .d1 { animation-delay: .08s; } .d2 { animation-delay: .16s; } .d3 { animation-delay: .24s; }
+  @keyframes rise { from { opacity: 0; transform: translateY(16px); } }
+  .collage figure { animation: drop .9s cubic-bezier(.2, .7, .1, 1) both; }
+  .collage figure:nth-child(2) { animation-delay: .1s; }
+  .collage figure:nth-child(3) { animation-delay: .2s; }
+  .collage figure:nth-child(4) { animation-delay: .3s; }
+  @keyframes drop { from { opacity: 0; translate: 0 24px; } }
+
+  /* intro: full red screen, a heart beats then lands in the hero button */
+  .intro-screen { display: none; position: fixed; inset: 0; z-index: 1000; background: #9e0020; }
+  html.intro-wait .intro-screen { display: block; }
+  /* no scrollbar strip beside the red screen */
+  html.intro, html.intro body { overflow: hidden; }
+  .intro-screen svg {
+    --s: clamp(96px, 22vmin, 180px);
+    position: absolute; left: 50%; top: 50%;
+    width: var(--s); height: var(--s); margin: calc(var(--s) / -2) 0 0 calc(var(--s) / -2);
+    color: var(--cream); overflow: visible;
+  }
+  html.intro .rise, html.intro .collage figure { animation-play-state: paused; }
+  html.intro-wait .hero .cta .heart { visibility: hidden; }
+  @keyframes fade { from { opacity: 0; } }
+
+  @media (max-width: 900px) {
+    .hero { grid-template-columns: minmax(0, 1fr); gap: 56px; padding-block: 24px 72px; }
+    .collage { justify-self: center; max-width: 440px; }
+    .collage figure:nth-child(3) { left: 50%; }
+    .collage figure:nth-child(4) { left: 53%; }
+    .how { padding-block: 72px 80px; }
+    .steps { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-top: 44px; }
+    .signup-section { grid-template-columns: minmax(0, 1fr); gap: 40px; padding-block: 64px 80px; }
+  }
+  @media (max-width: 520px) {
+    .tag { font-size: 14px; }
+    .tag .sep { margin: 0 2px; }
+    .hero { gap: 40px; }
+    .how h2, .signup-section h2 { font-size: 38px; }
+    .steps li { padding: 22px 22px 26px; }
+    .steps .num { font-size: 36px; }
+    .steps { grid-template-columns: minmax(0, 1fr); }
+    .nav { gap: 16px; }
+    .bar a { font-size: 14px; }
+    body { padding-inline: 18px; }
+    .bar { padding-block: 16px; }
+    .lede { font-size: 17px; }
+    .meta { border-left: 0; padding-left: 0; }
+    form .cta { justify-self: stretch; justify-content: center; }
+    .pair { grid-template-columns: minmax(0, 1fr); }
+  }
+  /* Laptop screens: scale the whole page down to match the large-screen feel */
+  @media (min-width: 901px) and (max-width: 1700px) {
+    :root { --z: .82; }
+    body { zoom: var(--z); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .rise, .collage figure { animation: none; }
+    .collage figure, .cta, .cta svg { transition: none; }
+  }
+
+</style>
+<style>html,body{margin:0}</style>
+</head>
+<body>
+<div class="intro-screen" aria-hidden="true">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"><path vector-effect="non-scaling-stroke" d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>
+</div>
+<script>
+  // Runs before first paint: move the intro outside the zoomed body, or drop it
+  (() => {
+    const screen = document.querySelector(".intro-screen");
+    if (matchMedia("(prefers-reduced-motion: reduce)").matches || scrollY > 40) return screen.remove();
+    document.documentElement.append(screen);
+    document.documentElement.classList.add("intro", "intro-wait");
+  })();
+</script>
+
+<div class="wrap">
+  <header class="bar">
+    <div class="logo">
+      <!-- Logo: two thin rings meeting; the overlap is filled. -->
+      <svg viewBox="0 0 38 26" aria-hidden="true">
+        <circle cx="13" cy="13" r="11" fill="none" stroke="#ff2d46" stroke-width="1.6"/>
+        <circle cx="25" cy="13" r="11" fill="none" stroke="#ff2d46" stroke-width="1.6"/>
+      </svg>
+      <span>Lovin' lln</span>
+    </div>
+    <nav class="nav">
+      <a href="#contact" data-to="contact">Contactez-nous</a>
+      <a href="#inscription" data-scroll>Je m'inscris</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <div class="hero-text">
+      <span class="tag rise">Speed dating étudiant <span class="sep">·</span> Dès 20 ans <span class="sep">·</span> <span class="nw">Louvain-la-Neuve</span></span>
+      <h1 class="rise d1">Come find <span class="nw"><span class="hl">Lovin</span>-la-Neuve.</span></h1>
+      <p class="lede rise d2">Un petit speed dating à la cool entre étudiant·es : un verre à la main, quelques discussions de cinq minutes, et qui sait, peut-être un match en vrai.</p>
+      <div class="actions rise d3">
+        <a class="cta" href="#inscription" data-scroll>
+          Réserver ma place
+          <svg class="heart" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><path d="M12 20.5s-7.5-4.6-7.5-10.2A4.3 4.3 0 0 1 12 7.6a4.3 4.3 0 0 1 7.5 2.7c0 5.6-7.5 10.2-7.5 10.2z"/></svg>
+        </a>
+        <ul class="meta">
+          <li>Date annoncée bientôt</li>
+          <li>Lieu annoncé bientôt</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="collage" aria-hidden="true">
+      <figure><img src="img/p1.jpg" alt=""></figure>
+      <figure><img src="img/p2.jpg" alt=""></figure>
+      <figure><img src="img/p3.jpg" alt=""></figure>
+      <figure><img src="img/p4.jpg" alt=""></figure>
+    </div>
+  </section>
+
+  <section class="how" id="deroulement">
+    <div class="how-head">
+      <span class="tag">Le déroulement</span>
+      <h2>Comment ça se <span class="hl">passe</span>.</h2>
+    </div>
+    <ol class="steps">
+      <li>
+        <span class="num">01</span>
+        <h3>Un verre offert</h3>
+        <p>Tu arrives, on t'accueille avec un verre. De quoi se détendre avant le premier tête-à-tête.</p>
+      </li>
+      <li>
+        <span class="num">02</span>
+        <h3>Cinq minutes</h3>
+        <p>Une table, une personne, cinq minutes pour faire connaissance. Pas de profil, pas de swipe.</p>
+      </li>
+      <li>
+        <span class="num">03</span>
+        <h3>Trente secondes</h3>
+        <p>Au signal, tu prends trente secondes pour noter tes impressions sur la personne.</p>
+      </li>
+      <li>
+        <span class="num">04</span>
+        <h3>Tu changes de table</h3>
+        <p>Nouvelle table, nouvelle rencontre. Et on recommence jusqu'à la fin de la soirée.</p>
+      </li>
+    </ol>
+  </section>
+
+  <section class="signup-section" id="inscription">
+    <div class="intro">
+      <span class="tag">Inscription</span>
+      <h2><span class="hl">Find</span> ton match, en vrai.</h2>
+      <p>Laisse ton nom, ton email et ton Insta. Tu reçois la date et le lieu avant tout le monde.</p>
+    </div>
+
+    <form id="signup" novalidate>
+      <div class="pair">
+        <div class="field">
+          <label for="firstname">Prénom</label>
+          <div class="box"><input type="text" id="firstname" name="firstname" autocomplete="given-name" placeholder="Julien" required></div>
+        </div>
+        <div class="field">
+          <label for="lastname">Nom</label>
+          <div class="box"><input type="text" id="lastname" name="lastname" autocomplete="family-name" placeholder="Huart" required></div>
+        </div>
+      </div>
+      <div class="field">
+        <span class="label" id="sex-label">Sexe</span>
+        <div class="ages sexes" role="radiogroup" aria-labelledby="sex-label" id="sex">
+          <label><input type="radio" name="sex" value="Homme"><span>Homme</span></label>
+          <label><input type="radio" name="sex" value="Femme"><span>Femme</span></label>
+        </div>
+      </div>
+      <div class="field">
+        <span class="label" id="age-label">Âge</span>
+        <div class="ages" role="radiogroup" aria-labelledby="age-label" id="age">
+          <label><input type="radio" name="age" value="20"><span>20</span></label>
+          <label><input type="radio" name="age" value="21"><span>21</span></label>
+          <label><input type="radio" name="age" value="22"><span>22</span></label>
+          <label><input type="radio" name="age" value="23"><span>23</span></label>
+          <label><input type="radio" name="age" value="other"><span>Autre</span></label>
+        </div>
+        <div class="box age-other" id="age-other-box" hidden>
+          <input type="number" id="age-other" name="age-other" inputmode="numeric" min="20" max="99" placeholder="Ton âge" aria-label="Ton âge">
+          <span class="unit">ans</span>
+        </div>
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <div class="box"><input type="email" id="email" name="email" autocomplete="email" placeholder="julien.huart@gmail.com" required></div>
+      </div>
+      <div class="field">
+        <label for="instagram">Instagram</label>
+        <div class="box"><span class="at">@</span><input type="text" id="instagram" name="instagram" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="julien.huart" required></div>
+      </div>
+      <label class="consent" for="consent">
+        <input type="checkbox" id="consent" name="consent" required>
+        <span>J'accepte d'être recontacté·e pour cet événement. Mes infos restent entre nous.</span>
+      </label>
+      <!-- Anti-spam trap: hidden from people, bots tick it and get rejected -->
+      <input type="checkbox" name="botcheck" class="hp" tabindex="-1" autocomplete="off" aria-hidden="true">
+      <p class="error" id="error" hidden></p>
+      <button class="cta" type="submit" id="submit">
+        <span id="submit-label">Je m'inscris</span>
+        <svg class="arrow" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="square" aria-hidden="true"><path d="M3 10h13M10.5 4.5 16 10l-5.5 5.5"/></svg>
+      </button>
+      <p class="fine">Soirée réservée aux étudiant·es à partir de 20 ans.</p>
+    </form>
+
+    <div class="done" id="done" hidden>
+      <svg viewBox="0 0 38 26" aria-hidden="true">
+        <circle cx="13" cy="13" r="11" fill="none" stroke="#ff2d46" stroke-width="1.6"/>
+        <circle cx="25" cy="13" r="11" fill="none" stroke="#ff2d46" stroke-width="1.6"/>
+      </svg>
+      <h3 id="done-title">C'est noté.</h3>
+      <p>On t'écrit dès que la date est fixée. Garde un œil sur tes DM Insta aussi.</p>
+    </div>
+  </section>
+
+  <footer id="contact">
+    <span>Lovin' LLN · Louvain-la-Neuve</span>
+    <span class="contact">Contactez-nous : <a href="mailto:contact.lovin.lln@gmail.com">contact.lovin.lln@gmail.com</a></span>
+    <span>Photos : Pexels, Unsplash</span>
+  </footer>
+</div>
+
+
+<script>
+  // Intro: the heart fades in on red, beats once, then flies into "Réserver ma place"
+  (() => {
+    const screen = document.querySelector(".intro-screen");
+    if (!screen || !screen.isConnected) return;
+    const root = document.documentElement;
+    const fly = screen.querySelector("svg"), path = fly.querySelector("path");
+    const target = document.querySelector(".hero .cta .heart");
+    const done = () => { root.classList.remove("intro", "intro-wait"); screen.remove(); };
+    const safety = setTimeout(done, 4000);
+    // The button fades in without moving so the heart has a fixed spot to land on
+    document.querySelector(".hero .actions").style.animationName = "fade";
+
+    fly.animate([{ opacity: 0, transform: "scale(.9)" }, { opacity: 1, transform: "scale(1)" }], { duration: 500, easing: "ease-out", fill: "backwards" });
+    fly.animate([{ transform: "scale(1)" }, { transform: "scale(1.12)" }, { transform: "scale(1)" }], { duration: 420, delay: 750, easing: "ease-in-out" });
+
+    setTimeout(() => {
+      root.classList.remove("intro"); // scrollbar back and hero rises in, before measuring
+      // body is zoomed on laptops: bring the target rect back to viewport pixels if needed
+      const z = parseFloat(getComputedStyle(document.body).zoom) || 1;
+      const r = target.getBoundingClientRect();
+      const k = Math.abs(r.width - 17 * z) <= Math.abs(r.width - 17) ? 1 : z;
+      const from = fly.getBoundingClientRect();
+      const box = (x, y, w) => ({ left: x + "px", top: y + "px", width: w + "px", height: w + "px", margin: "0px" });
+
+      screen.style.pointerEvents = "none";
+      screen.animate([{ backgroundColor: getComputedStyle(screen).backgroundColor }, { backgroundColor: "rgba(0,0,0,0)" }],
+        { duration: 700, delay: 120, easing: "ease-out", fill: "forwards" });
+
+      const opts = { duration: 900, easing: "cubic-bezier(.7,0,.2,1)", fill: "forwards" };
+      path.animate([{ strokeWidth: 1.6 }, { strokeWidth: 2 * r.width * k / 24 }], opts);
+      fly.animate([
+        { ...box(from.left, from.top, from.width), color: getComputedStyle(fly).color },
+        { ...box(r.left * k, r.top * k, r.width * k), color: getComputedStyle(target).color },
+      ], opts).onfinish = () => { clearTimeout(safety); done(); };
+    }, 1300);
+  })();
+
+  // Age "Autre": show a free number field
+  const otherBox = document.getElementById("age-other-box");
+  document.querySelectorAll('input[name="age"]').forEach(r => r.addEventListener("change", () => {
+    const isOther = r.value === "other" && r.checked;
+    otherBox.hidden = !isOther;
+    if (isOther) document.getElementById("age-other").focus();
+  }));
+
+  document.querySelectorAll("[data-to]").forEach(a => a.addEventListener("click", e => {
+    e.preventDefault();
+    document.getElementById(a.dataset.to).scrollIntoView({ behavior: "smooth", block: "end" });
+  }));
+
+  // Sticky header: tighten once the page scrolls
+  const bar = document.querySelector(".bar");
+  const onScroll = () => bar.classList.toggle("scrolled", window.scrollY > 8);
+  window.addEventListener("scroll", onScroll, { passive: true });
+  onScroll();
+
+
+  // Sign-ups are emailed to contact.lovin.lln@gmail.com through Web3Forms.
+  // This key is public by design: it can only send to that inbox.
+  const WEB3FORMS_KEY = "6867910d-02aa-4ec6-9fd1-67f508026add";
+  // Served by server.py (localhost), sign-ups are also saved to inscriptions.csv
+  const LOCAL_CSV = location.protocol.startsWith("http") && /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+
+  document.querySelectorAll("[data-scroll]").forEach(a => a.addEventListener("click", e => {
+    e.preventDefault();
+    document.getElementById("inscription").scrollIntoView({ behavior: "smooth", block: "start" });
+    setTimeout(() => document.getElementById("firstname").focus({ preventScroll: true }), 500);
+  }));
+
+  const form = document.getElementById("signup");
+  const errorEl = document.getElementById("error");
+  const submitBtn = document.getElementById("submit");
+  const submitLabel = document.getElementById("submit-label");
+
+  const emailOk = v => /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v);
+  const instaOk = v => /^[a-zA-Z0-9._]{1,30}$/.test(v);
+
+  document.getElementById("instagram").addEventListener("input", e => {
+    // Accept a pasted "@handle" or full profile link
+    let v = e.target.value.trim();
+    v = v.replace(/^https?:\/\/(www\.)?instagram\.com\//i, "").replace(/^@+/, "").replace(/[/?].*$/, "");
+    if (v !== e.target.value) e.target.value = v;
+  });
+
+  form.addEventListener("input", e => {
+    const box = e.target.closest(".box, .ages");
+    if (box) box.classList.remove("invalid");
+    errorEl.hidden = true;
+  });
+
+  form.addEventListener("submit", async e => {
+    e.preventDefault();
+    const data = {
+      firstname: form.firstname.value.trim(),
+      lastname: form.lastname.value.trim(),
+      email: form.email.value.trim().toLowerCase(),
+      instagram: form.instagram.value.trim(),
+      sex: (form.querySelector('input[name="sex"]:checked') || {}).value || "",
+      age: (form.querySelector('input[name="age"]:checked') || {}).value || "",
+      ageOther: document.getElementById("age-other").value.trim(),
+    };
+    const bad = [];
+    if (!data.firstname) bad.push(["firstname", "ton prénom"]);
+    if (!data.lastname) bad.push(["lastname", "ton nom"]);
+    if (!data.sex) bad.push(["sex", "ton sexe"]);
+    let ageNote = "";
+    if (data.age === "other") {
+      const n = Number(data.ageOther);
+      if (!data.ageOther) bad.push(["age-other", "ton âge"]);
+      else if (!Number.isInteger(n) || n < 20 || n > 99) { bad.push(["age-other", ""]); ageNote = "La soirée est ouverte à partir de 20 ans."; }
+      else data.age = String(n);
+    } else if (!data.age) bad.push(["age", "ton âge"]);
+    delete data.ageOther;
+    if (!emailOk(data.email)) bad.push(["email", "un email valide"]);
+    if (!instaOk(data.instagram)) bad.push(["instagram", "ton pseudo Instagram"]);
+    bad.forEach(([id]) => {
+      const el = document.getElementById(id);
+      (id === "age" || id === "sex" ? el : el.closest(".box")).classList.add("invalid");
+    });
+
+    if (bad.length) {
+      const missing = bad.map(b => b[1]).filter(Boolean);
+      errorEl.textContent = [missing.length ? "Il manque " + missing.join(", ") + "." : "", ageNote].filter(Boolean).join(" ");
+      errorEl.hidden = false;
+      const first = document.getElementById(bad[0][0]);
+      (first.tagName === "INPUT" ? first : first.querySelector("input")).focus();
+      return;
+    }
+    if (!form.consent.checked) {
+      errorEl.textContent = "Coche la case pour qu'on puisse te recontacter.";
+      errorEl.hidden = false;
+      return;
+    }
+
+    submitBtn.disabled = true;
+    submitLabel.textContent = "Envoi…";
+    try {
+      // Sent as form data (a "simple" request) so the browser skips the CORS preflight
+      const body = new FormData();
+      Object.entries({
+        access_key: WEB3FORMS_KEY,
+        subject: `Nouvelle inscription Lovin' LLN : ${data.firstname} ${data.lastname}`,
+        from_name: "Lovin' LLN",
+        replyto: data.email,
+        botcheck: form.botcheck.checked ? "on" : "",
+        "Prénom": data.firstname,
+        "Nom": data.lastname,
+        "Sexe": data.sex,
+        "Âge": data.age,
+        "Email": data.email,
+        "Instagram": "@" + data.instagram,
+      }).forEach(([k, v]) => body.append(k, v));
+      const res = await fetch("https://api.web3forms.com/submit", { method: "POST", headers: { "Accept": "application/json" }, body });
+      const out = await res.json().catch(() => ({}));
+      if (!res.ok || !out.success) throw new Error(out.message || res.status);
+      if (LOCAL_CSV) fetch("/api/signup", { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(data) }).catch(() => {});
+      document.getElementById("done-title").textContent = "C'est noté, " + data.firstname + ".";
+      form.hidden = true;
+      document.getElementById("done").hidden = false;
+    } catch (err) {
+      errorEl.textContent = "L'envoi n'est pas passé. Vérifie ta connexion et réessaie.";
+      errorEl.hidden = false;
+      submitBtn.disabled = false;
+      submitLabel.textContent = "Je m'inscris";
+    }
+  });
+</script>
+
+</body>
+</html>
